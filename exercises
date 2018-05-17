@@ -1,0 +1,52 @@
+---- What order (Invoice) was the most expensive? Which one was the cheapest?----
+
+SELECT Invoice.InvoiceId, MAX(Invoice.Total) 
+FROM Invoice 
+
+---- Which city (BillingCity) has the most orders? ---- 
+
+SELECT Invoice.BillingCity, COUNT (Invoice.InvoiceId) AS counted
+FROM Invoice
+GROUP BY Invoice.BillingCity
+ORDER BY counted desc;
+
+
+---- Calculate (or count) how many tracks have this MediaType: Protected AAC audio file.---- 
+
+SELECT MediaType.Name, COUNT(*)
+FROM Track
+INNER JOIN MediaType ON Track.MediaTypeId=MediaType.MediaTypeId
+WHERE MediaType.Name='Protected AAC audio file';
+
+---- Find out what Artist has the most albums? (hint: check ORDER BY)---- 
+
+(en este tengo una pregunta: la solucion viene hecha al reves, valen las 2?)
+
+SELECT Artist.Name, COUNT (*) AS amount
+FROM Album
+INNER JOIN Artist ON Album.ArtistId=Artist.ArtistId
+GROUP BY Artist.ArtistId
+ORDER BY amount desc;
+
+---- What genre has the most tracks?---- 
+
+SELECT Genre.Name, COUNT (*) as Genre_num
+FROM Genre
+JOIN Track ON Genre.GenreId=Track.GenreId
+GROUP BY Genre.GenreId
+ORDER BY Genre_num desc;
+
+---- Which customer spent the most money so far?---- 
+
+SELECT Customer.FirstName, Customer.LastName, SUM(Invoice.Total) as Customer_Total
+From Invoice
+JOIN Customer on Customer.CustomerId=Invoice.CustomerId
+GROUP BY Customer.CustomerId
+ORDER BY Customer_Total desc;
+
+---- What songs were bought with each order? (hint: here you have to do a many-to-many SQL query with three tables: Track, Invoice and InvoiceLine. You have to do two JOINS here)---- 
+
+SELECT Invoice.InvoiceId, Track.Name
+FROM Track
+JOIN InvoiceLine ON Track.TrackId=InvoiceLine.TrackId
+JOIN Invoice ON InvoiceLine.InvoiceId=Invoice.InvoiceId;
